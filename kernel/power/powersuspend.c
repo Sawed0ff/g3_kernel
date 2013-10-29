@@ -105,7 +105,7 @@ static void power_suspend(struct work_struct *work)
 	#ifdef CONFIG_POWERSUSPEND_DEBUG
 	pr_info("[POWERSUSPEND] suspending...\n");
 	#endif
-=======
+
 	mutex_lock(&power_suspend_lock);
 	spin_lock_irqsave(&state_lock, irqflags);
 	if (state != 1)
@@ -208,8 +208,13 @@ static void set_power_suspend_state(int new_state)
 	spin_lock_irqsave(&state_lock, irqflags);
 	old_sleep = state;
 	if (!old_sleep && new_state == 1) {
+		state = new_state;
 		queue_work(suspend_work_queue, &power_suspend_work);
 	} else if (!old_sleep || new_state == 0) {
+
+
+
+		state = new_state;
 
 		queue_work(suspend_work_queue, &power_resume_work);
 	}
@@ -281,6 +286,7 @@ static ssize_t power_suspend_store(struct kobject *kobj,
 	int data = 0;
 
 
+
 	sscanf(buf, "%d\n", &data);
 
 	switch (data) {
@@ -300,6 +306,9 @@ static struct kobj_attribute power_suspend_mode_attribute =
 
 
 	sscanf(buf, "%u\n", &data);
+
+	sscanf(buf, "%d\n", &data);
+
 
 	if(data == 1 || data == 0) {
 		set_power_suspend_state(data);
