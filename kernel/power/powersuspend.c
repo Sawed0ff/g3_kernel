@@ -43,16 +43,8 @@
 
 #define MINOR_VERSION	6
 
-#define MINOR_VERSION	0
-
-#define MINOR_VERSION	1
-
-#define MINOR_VERSION	2
-
 
 //#define POWER_SUSPEND_DEBUG
-
-
 
 struct workqueue_struct *suspend_work_queue;
 
@@ -120,7 +112,11 @@ static void power_suspend(struct work_struct *work)
 	pr_info("[POWERSUSPEND] suspending...\n");
 	#endif
 
-
+	mutex_lock(&power_suspend_lock);
+	spin_lock_irqsave(&state_lock, irqflags);
+	if (state != 1)
+		abort = 1;
+	spin_unlock_irqrestore(&state_lock, irqflags);
 
 #ifdef POWER_SUSPEND_DEBUG
 	pr_warn("power_suspend: entering suspend...\n");
@@ -249,14 +245,19 @@ void set_power_suspend_state(int new_state)
 
 	spin_lock_irqsave(&state_lock, irqflags);
 	old_sleep = state;
+
 	if (old_sleep == POWER_SUSPEND_INACTIVE && new_state == POWER_SUSPEND_ACTIVE) {
 #ifdef POWER_SUSPEND_DEBUG
 		pr_warn("power_suspend: activated.\n");
 #endif
+
+	if (!old_sleep && new_state == 1) {
+
 		state = new_state;
 		queue_work(suspend_work_queue, &power_suspend_work);
 
 	} else if (!old_sleep || new_state == 0) {
+
 
 
 
