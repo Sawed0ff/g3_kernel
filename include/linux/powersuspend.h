@@ -10,8 +10,10 @@
 
  * Modified by Jean-Pierre Rasquin <yank555.lu@gmail.com>
  *
- *   make powersuspend not depend on a userspace initiator anymore,
- *   but use a hook in autosleep instead.
+ *  v1.1 - make powersuspend not depend on a userspace initiator anymore,
+ *         but use a hook in autosleep instead.
+ *
+ *  v1.2 - make kernel / userspace mode switchable
  *
 
  * This software is licensed under the terms of the GNU General Public
@@ -34,12 +36,17 @@
 #define POWER_SUSPEND_INACTIVE	0
 #define POWER_SUSPEND_ACTIVE	1
 
+
 #define POWER_SUSPEND_USERSPACE	1	// Use fauxclock as trigger
 #define POWER_SUSPEND_PANEL	2	// Use display panel state as hook
 
 
 #define POWER_SUSPEND_INACTIVE	0
 #define POWER_SUSPEND_ACTIVE	1
+
+
+#define POWER_SUSPEND_KERNEL	0
+#define POWER_SUSPEND_USERSPACE	1
 
 
 struct power_suspend {
