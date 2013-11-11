@@ -3,6 +3,7 @@
  * Copyright (C) 2005-2008 Google, Inc.
  * Copyright (C) 2013 Paul Reioux
  *
+<<<<<<< HEAD
 
  * Modified by Jean-Pierre Rasquin <yank555.lu@gmail.com>
  *
@@ -21,8 +22,18 @@
  *
 
 
+<<<<<<< HEAD
 
 
+=======
+=======
+ * Modified by Jean-Pierre Rasquin <yank555.lu@gmail.com>
+ *
+ *   make powersuspend not depend on a userspace initiator anymore,
+ *   but use a hook in autosleep instead.
+ *
+>>>>>>> 87c7fca... kernel/power/powersuspend: remove userspace dependency from powersuspend
+>>>>>>> e6e451a... kernel/power/powersuspend: remove userspace dependency from powersuspend
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
  * may be copied, distributed, and modified under those terms.
@@ -40,9 +51,19 @@
 #include <linux/workqueue.h>
 
 #define MAJOR_VERSION	1
+<<<<<<< HEAD
 
 #define MINOR_VERSION	6
 
+<<<<<<< HEAD
+=======
+#define MINOR_VERSION	0
+=======
+#define MINOR_VERSION	1
+
+//#define POWER_SUSPEND_DEBUG
+
+>>>>>>> e6e451a... kernel/power/powersuspend: remove userspace dependency from powersuspend
 
 //#define POWER_SUSPEND_DEBUG
 
@@ -96,6 +117,7 @@ static void power_suspend(struct work_struct *work)
 	int abort = 0;
 
 
+
 	#ifdef CONFIG_POWERSUSPEND_DEBUG
 	pr_info("[POWERSUSPEND] entering suspend...\n");
 	#endif
@@ -112,14 +134,31 @@ static void power_suspend(struct work_struct *work)
 	pr_info("[POWERSUSPEND] suspending...\n");
 	#endif
 
-	mutex_lock(&power_suspend_lock);
-	spin_lock_irqsave(&state_lock, irqflags);
-	if (state != 1)
-		abort = 1;
-	spin_unlock_irqrestore(&state_lock, irqflags);
 
 #ifdef POWER_SUSPEND_DEBUG
 	pr_warn("power_suspend: entering suspend...\n");
+#endif
+
+	mutex_lock(&power_suspend_lock);
+	spin_lock_irqsave(&state_lock, irqflags);
+	if (state == POWER_SUSPEND_INACTIVE)
+		abort = 1;
+	spin_unlock_irqrestore(&state_lock, irqflags);
+
+<<<<<<< HEAD
+#ifdef POWER_SUSPEND_DEBUG
+	pr_warn("power_suspend: entering suspend...\n");
+#endif
+=======
+	if (abort)
+		goto abort_suspend;
+
+
+
+>>>>>>> e6e451a... kernel/power/powersuspend: remove userspace dependency from powersuspend
+
+#ifdef POWER_SUSPEND_DEBUG
+	pr_warn("power_suspend: suspending...\n");
 #endif
 
 	list_for_each_entry(pos, &power_suspend_handlers, link) {
@@ -129,8 +168,11 @@ static void power_suspend(struct work_struct *work)
 	}
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> e6e451a... kernel/power/powersuspend: remove userspace dependency from powersuspend
 	#ifdef CONFIG_POWERSUSPEND_DEBUG
 	pr_info("[POWERSUSPEND] suspend completed.\n");
 	#endif
@@ -138,7 +180,10 @@ abort_suspend:
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e6e451a... kernel/power/powersuspend: remove userspace dependency from powersuspend
 #ifdef POWER_SUSPEND_DEBUG
 	pr_warn("power_suspend: suspended.\n");
 #endif
@@ -155,7 +200,10 @@ static void power_resume(struct work_struct *work)
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e6e451a... kernel/power/powersuspend: remove userspace dependency from powersuspend
 	#ifdef CONFIG_POWERSUSPEND_DEBUG
 	pr_info("[POWERSUSPEND] entering resume...\n");
 	#endif
@@ -196,13 +244,17 @@ static void power_resume(struct work_struct *work)
 	pr_warn("powersuspend: resuming...\n");
 #endif
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> e6e451a... kernel/power/powersuspend: remove userspace dependency from powersuspend
 	list_for_each_entry_reverse(pos, &power_suspend_handlers, link) {
 		if (pos->resume != NULL) {
 			pos->resume(pos);
 		}
 	}
+
 
 	#ifdef CONFIG_POWERSUSPEND_DEBUG
 	pr_info("[POWERSUSPEND] resume completed.\n");
@@ -238,21 +290,31 @@ abort_resume:
 	mutex_unlock(&power_suspend_lock);
 }
 
+<<<<<<< HEAD
 void set_power_suspend_state(int new_state)
+=======
+void set_power_suspend_state_hook(int new_state)
+>>>>>>> e6e451a... kernel/power/powersuspend: remove userspace dependency from powersuspend
 {
 	unsigned long irqflags;
 	int old_sleep;
 
 	spin_lock_irqsave(&state_lock, irqflags);
 	old_sleep = state;
+<<<<<<< HEAD
 
+=======
+>>>>>>> e6e451a... kernel/power/powersuspend: remove userspace dependency from powersuspend
 	if (old_sleep == POWER_SUSPEND_INACTIVE && new_state == POWER_SUSPEND_ACTIVE) {
 #ifdef POWER_SUSPEND_DEBUG
 		pr_warn("power_suspend: activated.\n");
 #endif
+<<<<<<< HEAD
 
 	if (!old_sleep && new_state == 1) {
 
+=======
+>>>>>>> e6e451a... kernel/power/powersuspend: remove userspace dependency from powersuspend
 		state = new_state;
 		queue_work(suspend_work_queue, &power_suspend_work);
 
@@ -261,7 +323,10 @@ void set_power_suspend_state(int new_state)
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e6e451a... kernel/power/powersuspend: remove userspace dependency from powersuspend
 	} else if (old_sleep == POWER_SUSPEND_INACTIVE || new_state == POWER_SUSPEND_INACTIVE) {
 #ifdef POWER_SUSPEND_DEBUG
 		pr_warn("power_suspend: deactivated.\n");
@@ -274,6 +339,11 @@ void set_power_suspend_state(int new_state)
 	spin_unlock_irqrestore(&state_lock, irqflags);
 }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> e6e451a... kernel/power/powersuspend: remove userspace dependency from powersuspend
 void set_power_suspend_state_panel_hook(int new_state)
 {
 	#ifdef CONFIG_POWERSUSPEND_DEBUG
@@ -313,6 +383,7 @@ static ssize_t power_suspend_state_show(struct kobject *kobj,
 {
         return sprintf(buf, "%u\n", state);
 }
+
 
 
 static ssize_t power_suspend_state_store(struct kobject *kobj,
@@ -419,14 +490,17 @@ static ssize_t power_suspend_version_show(struct kobject *kobj,
 	return sprintf(buf, "version: %d.%d\n", MAJOR_VERSION, MINOR_VERSION);
 }
 
-
-static struct kobj_attribute power_suspend_version_attribute =
-	__ATTR(power_suspend_version, 0444,
-
 static struct kobj_attribute power_suspend_attribute =
         __ATTR(power_suspend_state, 0666,
 		power_suspend_show,
 		power_suspend_store);
+
+static struct kobj_attribute power_suspend_version_attribute =
+        __ATTR(power_suspend_version, 0444,
+
+
+static struct kobj_attribute power_suspend_version_attribute =
+	__ATTR(power_suspend_version, 0444,
 
 		power_suspend_version_show,
 		NULL);
@@ -482,6 +556,8 @@ static int __init power_suspend_init(void)
 //	mode = POWER_SUSPEND_USERSPACE;	// Yank555.lu : Default to userspace mode
 	mode = POWER_SUSPEND_PANEL;	// Yank555.lu : Default to display panel mode
 	mode = POWER_SUSPEND_KERNEL; // Yank555.lu : Default to kernel mode
+
+
 
 	return 0;
 }
