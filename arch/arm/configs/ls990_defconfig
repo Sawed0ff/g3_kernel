@@ -1,7 +1,7 @@
 #
-# 777 Kernel
+# Remy Kernel
 #
-CONFIG_LOCALVERSION="-AOSP-777-Kernel"
+CONFIG_LOCALVERSION="-AOSP-Remy-Kernel"
 
 # TCP Options
 CONFIG_TCP_CONG_ADVANCED=y
