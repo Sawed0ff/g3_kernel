@@ -372,15 +372,6 @@ AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
 
-# fall back to -march=armv7-a in case the compiler isn't compatible with -mcpu and -mtune
-ARM_ARCH_OPT := -mcpu=cortex-a15 -mtune=cortex-a15
-GEN_OPT_FLAGS := $(call cc-option,$(ARM_ARCH_OPT),-march=armv7-a) \
-        -g0 \
-        -DNDEBUG \
-        -fomit-frame-pointer \
-        -funsafe-math-optimizations
->>>>>>> 01d11e6... Krait: use cortex-a15 flags with fall back to -march=armv7-a
-
 # Use LINUXINCLUDE when you must reference the include/ directory.
 # Needed to be compatible with the O= option
 LINUXINCLUDE    := -I$(srctree)/arch/$(hdr-arch)/include \
@@ -394,20 +385,12 @@ KBUILD_CFLAGS   := -Wall -DNDEBUG -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
-
 		   -fno-delete-null-pointer-checks
 
 KBUILD_CFLAGS   += $(GRAPHITE_FLAGS)
 
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
-
-		   -fno-delete-null-pointer-checks\
-		   $(GEN_OPT_FLAGS)
-
-KBUILD_AFLAGS_KERNEL := $(GEN_OPT_FLAGS)
-KBUILD_CFLAGS_KERNEL := $(GEN_OPT_FLAGS)
-
 KBUILD_AFLAGS   := -D__ASSEMBLY__
 KBUILD_AFLAGS_MODULE  := -DMODULE
 KBUILD_CFLAGS_MODULE  := -DMODULE
