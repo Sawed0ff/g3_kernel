@@ -29,6 +29,7 @@ modules.builtin
 *.bz2
 *.lzma
 *.xz
+*.lz4
 *.lzo
 *.patch
 *.gcno
@@ -85,4 +86,5 @@ GTAGS
 *~
 \#*#
 
-arch/arm/mach-msm/smd_rpc_sym.c
+# Generated source files
+smd_rpc_sym.c

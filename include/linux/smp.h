@@ -19,7 +19,7 @@ struct call_single_data {
 	struct list_head list;
 	smp_call_func_t func;
 	void *info;
-	unsigned int flags;
+	u16 flags;
 	u16 priv;
 };
 
@@ -61,7 +61,7 @@ extern void smp_prepare_cpus(unsigned int max_cpus);
 /*
  * Bring a CPU up
  */
-extern int __cpu_up(unsigned int cpunum);
+extern int __cpu_up(unsigned int cpunum, struct task_struct *tidle);
 
 /*
  * Final polishing of CPUs
